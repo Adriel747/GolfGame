@@ -6376,7 +6376,13 @@
         case '[object Null]':
             return 'null';
         case '[object Number]':
-            return typeof x === 'object' ? 'new Number(' + recur(x.valueOf()) + ')' : 1 / x === -Infinity ? '-0' : x.toString(10);
+            if (typeof x === 'object') {
+                return 'new Number(' + recur(x.valueOf()) + ')';
+            } 
+            if (1 / x === -Infinity) {
+                return '-0';
+            }
+            return x.toString(10);        
         case '[object String]':
             return typeof x === 'object' ? 'new String(' + recur(x.valueOf()) + ')' : _quote(x);
         case '[object Undefined]':
