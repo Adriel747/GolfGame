@@ -6887,7 +6887,13 @@
         var width = 2 - len % 2;
         var idx = (len - width) / 2;
         return mean(_slice(list).sort(function (a, b) {
-            return a < b ? -1 : a > b ? 1 : 0;
+            if (a < b) {
+                return -1;
+            } 
+            if (a > b) {
+                return 1;
+            } 
+            return 0;
         }).slice(idx, idx + width));
     });
 
