@@ -1875,7 +1875,7 @@
      *      R.isNaN(undefined);  //=> false
      *      R.isNaN({});         //=> false
      */
-    var isNaN = _curry1(function isNaN(x) {
+    var isNotANumber = _curry1(function isNotANumber(x) {
         return typeof x === 'number' && x !== x;
     });
 
