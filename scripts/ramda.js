@@ -948,7 +948,6 @@
             };
         case 10:
             return function (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
-                void a9;
                 return fn.apply(this, arguments);
             };
         default:
