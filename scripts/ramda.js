@@ -932,7 +932,6 @@
             };
         case 6:
             return function (a0, a1, a2, a3, a4, a5) {
-                void a5;
                 return fn.apply(this, arguments);
             };
         case 7:
