@@ -1044,7 +1044,16 @@
      */
     var comparator = _curry1(function comparator(pred) {
         return function (a, b) {
-            return pred(a, b) ? -1 : pred(b, a) ? 1 : 0;
+            return function (a, b) {
+                if (pred(a, b)) {
+                    return -1;
+                } 
+                if (pred(b, a)) {
+                    return 1;
+                } 
+                return 0;
+            };
+            
         };
     });
 
