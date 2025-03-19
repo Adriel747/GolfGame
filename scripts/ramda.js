@@ -3445,7 +3445,13 @@
      *      R.type(/[A-z]/); //=> "RegExp"
      */
     var type = _curry1(function type(val) {
-        return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
+        if (val === null) {
+            return 'Null';
+        } 
+        if (val === undefined) {
+            return 'Undefined';
+        }
+        return Object.prototype.toString.call(val).slice(8, -1);
     });
 
     /**
