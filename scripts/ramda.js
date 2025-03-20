@@ -5197,7 +5197,7 @@
      *      toBinary(63); //=> '111111'
      */
     var invoke = curry(function invoke(methodName, args, obj) {
-        return obj[methodName].apply(obj, args);
+        return obj[methodName](... args);
     });
 
     /**
