@@ -245,60 +245,34 @@
     var _curry3 = function _curry3(fn) {
         return function f3(a, b, c) {
             var n = arguments.length;
-            if (n === 0) {
+    
+            if (n === 0 || (n === 1 && a === __) || (n === 2 && a === __ && b === __) || (n === 3 && a === __ && b === __ && c === __)) {
                 return f3;
-            } else if (n === 1 && a === __) {
-                return f3;
-            } else if (n === 1) {
-                return _curry2(function (b, c) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 2 && a === __ && b === __) {
-                return f3;
-            } else if (n === 2 && a === __) {
-                return _curry2(function (a, c) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 2 && b === __) {
-                return _curry2(function (b, c) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 2) {
-                return _curry1(function (c) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 3 && a === __ && b === __ && c === __) {
-                return f3;
-            } else if (n === 3 && a === __ && b === __) {
-                return _curry2(function (a, b) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 3 && a === __ && c === __) {
-                return _curry2(function (a, c) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 3 && b === __ && c === __) {
-                return _curry2(function (b, c) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 3 && a === __) {
-                return _curry1(function (a) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 3 && b === __) {
-                return _curry1(function (b) {
-                    return fn(a, b, c);
-                });
-            } else if (n === 3 && c === __) {
-                return _curry1(function (c) {
-                    return fn(a, b, c);
-                });
-            } else {
-                return fn(a, b, c);
             }
+    
+            if (n === 1) {
+                return _curry2((b, c) => fn(a, b, c));
+            }
+    
+            if (n === 2) {
+                if (a === __) return _curry2((a, c) => fn(a, b, c));
+                if (b === __) return _curry2((b, c) => fn(a, b, c));
+                return _curry1(c => fn(a, b, c));
+            }
+    
+            if (n === 3) {
+                if (a === __ && b === __) return _curry2((a, b) => fn(a, b, c));
+                if (a === __ && c === __) return _curry2((a, c) => fn(a, b, c));
+                if (b === __ && c === __) return _curry2((b, c) => fn(a, b, c));
+                if (a === __) return _curry1(a => fn(a, b, c));
+                if (b === __) return _curry1(b => fn(a, b, c));
+                if (c === __) return _curry1(c => fn(a, b, c));
+            }
+    
+            return fn(a, b, c);
         };
     };
-
+    
     var _dissoc = function _dissoc(prop, obj) {
         var result = {};
         for (var p in obj) {
