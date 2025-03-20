@@ -4081,7 +4081,7 @@
             if (!_isArray(obj)) {
                 var args = _slice(arguments, 0, length - 1);
                 if (typeof obj[methodname] === 'function') {
-                    return obj[methodname].apply(obj, args);
+                    return obj[methodname](... args);
                 }
                 if (_isTransformer(obj)) {
                     var transducer = xf.apply(null, args);
