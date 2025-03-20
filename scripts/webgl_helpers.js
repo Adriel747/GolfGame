@@ -9,7 +9,7 @@ define(function() {
         gl.compileShader(shader);
         var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
         if (!success) {
-            throw "could not compile shader:" + gl.getShaderInfoLog(shader);
+            throw new Error("could not compile shader:" + gl.getShaderInfoLog(shader));
         }
         return shader;
     };
