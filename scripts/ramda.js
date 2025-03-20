@@ -493,12 +493,9 @@
         return '"' + s.replace(/"/g, '\\"') + '"';
     };
 
-    var _reduced = function (x) {
-        return x && x['@@transducer/reduced'] ? x : {
-            '@@transducer/value': x,
-            '@@transducer/reduced': true
-        };
-    };
+    const _reduced =  (x) =>
+        x?.['@@transducer/reduced'] ? x : { '@@transducer/reduced': true, '@@transducer/value': x };
+
 
     /**
      * An optimized, private array `slice` implementation.
