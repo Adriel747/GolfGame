@@ -6353,7 +6353,7 @@
                 }, preds);
             };
             return arguments.length > 1 ? // Call function immediately if given arguments
-            predIterator.apply(null, _slice(arguments, 1)) : // Return a function which will call the predicates with the provided arguments
+            predIterator(... _slice(arguments, 1)) : // Return a function which will call the predicates with the provided arguments
             arity(max(_pluck('length', preds)), predIterator);
         };
     };
