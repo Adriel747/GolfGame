@@ -4084,7 +4084,7 @@
                     return obj[methodname](... args);
                 }
                 if (_isTransformer(obj)) {
-                    var transducer = xf.apply(null, args);
+                    var transducer = xf(... args);
                     return transducer(obj);
                 }
             }
