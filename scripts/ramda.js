@@ -6349,7 +6349,7 @@
             var predIterator = function () {
                 var args = arguments;
                 return predPicker(function (predicate) {
-                    return predicate.apply(null, args);
+                    return predicate(...args);
                 }, preds);
             };
             return arguments.length > 1 ? // Call function immediately if given arguments
