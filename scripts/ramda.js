@@ -5228,7 +5228,7 @@
         return curryN(len + 1, function () {
             var target = arguments[len];
             var args = initialArgs.concat(_slice(arguments, 0, len));
-            return target[method].apply(target, args);
+            return target[method](... args);
         });
     });
 
