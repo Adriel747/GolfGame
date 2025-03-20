@@ -6779,7 +6779,12 @@
         while (++idx < len) {
             var key = props[idx];
             var val = obj[key];
-            var list = _has(val, out) ? out[val] : out[val] = [];
+            var list;
+                if (_has(val, out)) {
+                    list = out[val];
+                } else {
+                    list = out[val] = [];
+                }
             list[list.length] = key;
         }
         return out;
