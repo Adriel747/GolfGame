@@ -3574,7 +3574,7 @@
     var unfold = _curry2(function unfold(fn, seed) {
         var pair = fn(seed);
         var result = [];
-        while (pair && pair.length) {
+        while (pair?.length) {
             result[result.length] = pair[0];
             pair = fn(pair[1]);
         }
