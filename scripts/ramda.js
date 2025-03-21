@@ -4164,7 +4164,7 @@
             var step = iter.next();
             while (!step.done) {
                 acc = xf['@@transducer/step'](acc, step.value);
-                if (acc && acc['@@transducer/reduced']) {
+                if (acc?.['@@transducer/reduced']) {
                     acc = acc['@@transducer/value'];
                     break;
                 }
