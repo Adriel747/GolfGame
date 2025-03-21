@@ -4153,7 +4153,7 @@
             var idx = -1, len = list.length;
             while (++idx < len) {
                 acc = xf['@@transducer/step'](acc, list[idx]);
-                if (acc && acc['@@transducer/reduced']) {
+                if (acc?.['@@transducer/reduced']) {
                     acc = acc['@@transducer/value'];
                     break;
                 }
