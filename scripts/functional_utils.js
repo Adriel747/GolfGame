@@ -1,7 +1,7 @@
 define(["ramda"], function(r) {
     "use strict";
 
-    var u = {};
+    let u = {};
 
     u.map = function(f) {
         var result = [];
@@ -68,7 +68,7 @@ define(["ramda"], function(r) {
         if (coll === undefined) {
             return u.partition(n, n, step);
         }
-        var result = [];
+        let result = [];
         while (coll.length >= n) {
             result.push(r.take(n, coll));
             coll = r.drop(step, coll);
