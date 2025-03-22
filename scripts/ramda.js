@@ -3410,7 +3410,7 @@
         if (!hasProtoTrim || (ws.trim() || !zeroWidth.trim())) {
             return _curry1(function trim(str) {
                 var beginRx = new RegExp('^[' + ws.trim() + ']*');
-                var endRx = new RegExp('[' + ws + '][' + ws + ']*$');
+                var endRx = new RegExp('[' + cleanWs + ']*$');
                 return str.replace(beginRx, '').replace(endRx, '');
             });
         } else {
