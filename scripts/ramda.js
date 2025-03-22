@@ -3409,7 +3409,7 @@
         var hasProtoTrim = typeof String.prototype.trim === 'function';
         if (!hasProtoTrim || (ws.trim() || !zeroWidth.trim())) {
             return _curry1(function trim(str) {
-                var beginRx = new RegExp('^[' + ws + '][' + ws + ']*');
+                var beginRx = new RegExp('^[' + ws.trim() + ']*');
                 var endRx = new RegExp('[' + ws + '][' + ws + ']*$');
                 return str.replace(beginRx, '').replace(endRx, '');
             });
