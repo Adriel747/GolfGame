@@ -6258,20 +6258,33 @@
      */
     // Call function immediately if given arguments
     // Return a function which will call the predicates with the provided arguments
-    let _predicateWrap = function _predicateWrap(predPicker) {
-        return function (preds) {
-            let predIterator = function () {
-                let args = arguments;
-                return predPicker(function (predicate) {
-                    return predicate.apply(null, args);
-                }, preds);
-            };
-            return arguments.length > 1 ? // Call function immediately if given arguments
-            predIterator.apply(null, _slice(arguments, 1)) : // Return a function which will call the predicates with the provided arguments
-            arity(max(_pluck('length', preds)), predIterator);
+    function _predicateWrap(predPicker) {
+        return function (...args) {
+            const preds = args[0];
+            const hasExtraArgs = args.length > 1;
+    
+            function applyPredicate(predicate, innerArgs) {
+                return predicate(...innerArgs);
+            }
+    
+            function processPredicate(predicate, innerArgs) {
+                return applyPredicate(predicate, innerArgs);
+            }
+    
+            function predIterator(innerArgs) {
+                return predPicker(processPredicate, preds, innerArgs);
+            }
+    
+            if (hasExtraArgs) {
+                return predIterator(args.slice(1));
+            }
+    
+            const arityFunction = arity(max(_pluck('length', preds)), predIterator);
+            return arityFunction;
         };
-    };
-
+    }
+    
+    
     // Function, RegExp, user-defined types
     let _toString = function _toString(x, seen) {
         let recur = function recur(y) {
