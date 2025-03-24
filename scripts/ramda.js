@@ -286,13 +286,15 @@
     let _eq = function _eq(a, b) {
         if (a === 0) {
             return 1 / a === 1 / b;
-        } else {
-            return a === b || a !== a && b !== b;
-        }
+        } 
+            return a === b || (Number.isNaN(a) && Number.isNaN(b));
     };
 
-    let _filter = function _filter(fn, list) {
-        let idx = -1, len = list.length, result = [];
+    const _filter = function _filter(fn, list) {
+        let idx = -1;
+        const len = list.length;
+        const result = [];
+
         while (++idx < len) {
             if (fn(list[idx])) {
                 result[result.length] = list[idx];
