@@ -4676,6 +4676,7 @@
     let dropWhile = _curry2(_dispatchable('dropWhile', _xdropWhile, function dropWhile(pred, list) {
         let idx = -1, len = list.length;
         while (++idx < len && pred(list[idx])) {
+            idx++;
         }
         return _slice(list, idx);
     }));
