@@ -1808,8 +1808,8 @@
      *      R.isNaN(undefined);  //=> false
      *      R.isNaN({});         //=> false
      */
-    let isNotANumber = _curry1(function isNotANumber(x) {
-        return typeof x === 'number' && x !== x;
+    let NotNumber = _curry1(function NotANumber(x) {
+        return typeof x === 'number' && Number.isNaN(x);
     });
 
     /**
@@ -2326,54 +2326,14 @@
      *      takesOneArg(1, 2); //=> [1, undefined]
      */
     let nAry = _curry2(function (n, fn) {
-        switch (n) {
-        case 0:
-            return function () {
-                return fn.call(this);
-            };
-        case 1:
-            return function (a0) {
-                return fn.call(this, a0);
-            };
-        case 2:
-            return function (a0, a1) {
-                return fn.call(this, a0, a1);
-            };
-        case 3:
-            return function (a0, a1, a2) {
-                return fn.call(this, a0, a1, a2);
-            };
-        case 4:
-            return function (a0, a1, a2, a3) {
-                return fn.call(this, a0, a1, a2, a3);
-            };
-        case 5:
-            return function (a0, a1, a2, a3, a4) {
-                return fn.call(this, a0, a1, a2, a3, a4);
-            };
-        case 6:
-            return function (a0, a1, a2, a3, a4, a5) {
-                return fn.call(this, a0, a1, a2, a3, a4, a5);
-            };
-        case 7:
-            return function (a0, a1, a2, a3, a4, a5, a6) {
-                return fn.call(this, a0, a1, a2, a3, a4, a5, a6);
-            };
-        case 8:
-            return function (a0, a1, a2, a3, a4, a5, a6, a7) {
-                return fn.call(this, a0, a1, a2, a3, a4, a5, a6, a7);
-            };
-        case 9:
-            return function (a0, a1, a2, a3, a4, a5, a6, a7, a8) {
-                return fn.call(this, a0, a1, a2, a3, a4, a5, a6, a7, a8);
-            };
-        case 10:
-            return function (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
-                return fn.call(this, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
-            };
-        default:
+        if (n < 0 || n > 10) {
             throw new Error('First argument to nAry must be a non-negative integer no greater than ten');
         }
+    
+        let argNames = Array.from({ length: n }, (_, i) => `a${i}`).join(", ");
+        let functionBody = `"use strict"; return function(${argNames}) { return fn.call(this, ${argNames}); };`;
+    
+        return new Function("fn", functionBody)(fn);
     });
 
     /**
@@ -6534,32 +6494,13 @@
                 return new Fn();
             };
         }
-        return curry(nAry(n, function ($0, $1, $2, $3, $4, $5, $6, $7, $8, $9) {
-            switch (arguments.length) {
-            case 1:
-                return new Fn($0);
-            case 2:
-                return new Fn($0, $1);
-            case 3:
-                return new Fn($0, $1, $2);
-            case 4:
-                return new Fn($0, $1, $2, $3);
-            case 5:
-                return new Fn($0, $1, $2, $3, $4);
-            case 6:
-                return new Fn($0, $1, $2, $3, $4, $5);
-            case 7:
-                return new Fn($0, $1, $2, $3, $4, $5, $6);
-            case 8:
-                return new Fn($0, $1, $2, $3, $4, $5, $6, $7);
-            case 9:
-                return new Fn($0, $1, $2, $3, $4, $5, $6, $7, $8);
-            case 10:
-                return new Fn($0, $1, $2, $3, $4, $5, $6, $7, $8, $9);
-            }
-        }));
+    
+        let argNames = Array.from({ length: n }, (_, i) => `$${i}`).join(", ");
+        let functionBody = `"use strict"; return function(${argNames}) { return new Fn(${argNames}); };`;
+    
+        return curry(nAry(n, new Function("Fn", functionBody)(Fn)));
     });
-
+    
     /**
      * Returns a new list without any consecutively repeating elements. Equality is
      * determined by applying the supplied predicate two consecutive elements.
@@ -7355,7 +7296,7 @@
         is: is,
         isArrayLike: isArrayLike,
         isEmpty: isEmpty,
-        isNaN: isNaN,
+        isNaN: NotNumber,
         isNil: isNil,
         isSet: isSet,
         join: join,
