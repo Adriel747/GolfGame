@@ -187,10 +187,6 @@ require(["ramda", "webgl_helpers", "functional_utils"], function(r, w, fun) {
         return min + Math.random() * (max - min);
     };
 
-    let randInt = function(min, max) {
-        return Math.floor(rand(min, max));
-    };
-
     let chance = function(chance) {
         return rand(1) < chance ? true : false;
     };
