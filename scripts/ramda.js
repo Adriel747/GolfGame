@@ -207,30 +207,24 @@
      * @param {Function} fn The function to curry.
      * @return {Function} The curried function.
      */
-    let _curry2 = function _curry2(fn) {
+    const _curry2 = function _curry2(fn) {
         return function f2(a, b) {
-            let n = arguments.length;
-            if (n === 0) {
+            const n = arguments.length;
+            
+            if (n === 0 || (n === 1 && a === __) || (n === 2 && a === __ && b === __)) {
                 return f2;
-            } else if (n === 1 && a === __) {
-                return f2;
-            } else if (n === 1) {
-                return _curry1(function (b) {
-                    return fn(a, b);
-                });
-            } else if (n === 2 && a === __ && b === __) {
-                return f2;
-            } else if (n === 2 && a === __) {
-                return _curry1(function (a) {
-                    return fn(a, b);
-                });
-            } else if (n === 2 && b === __) {
-                return _curry1(function (b) {
-                    return fn(a, b);
-                });
-            } else {
-                return fn(a, b);
             }
+            
+            if (n === 1) {
+                return _curry1(b => fn(a, b));
+            }
+            
+            if (n === 2) {
+                if (a === __) return _curry1(a => fn(a, b));
+                if (b === __) return _curry1(b => fn(a, b));
+            }
+            
+            return fn(a, b);
         };
     };
 
@@ -4762,6 +4756,7 @@
     let dropWhile = _curry2(_dispatchable('dropWhile', _xdropWhile, function dropWhile(pred, list) {
         let idx = -1, len = list.length;
         while (++idx < len && pred(list[idx])) {
+            idx++;
         }
         return _slice(list, idx);
     }));
@@ -6246,48 +6241,61 @@
     // The algorithm used to handle cyclic structures is
     // inspired by underscore's isEqual
     // RegExp equality algorithm: http://stackoverflow.com/a/10776635
-    let _eqDeep = function _eqDeep(a, b, stackA, stackB) {
+    let _eqDeep = function _eqDeep(a, b, stackA = [], stackB) {
         let typeA = type(a);
-        if (typeA !== type(b)) {
-            return false;
-        }
-        if (eq(a, b)) {
-            return true;
-        }
-        if (typeA == 'RegExp') {
-            // RegExp equality algorithm: http://stackoverflow.com/a/10776635
-            return a.source === b.source && a.global === b.global && a.ignoreCase === b.ignoreCase && a.multiline === b.multiline && a.sticky === b.sticky && a.unicode === b.unicode;
-        }
-        if (Object(a) === a) {
-            if (typeA === 'Date' && a.getTime() != b.getTime()) {
-                return false;
-            }
-            let keysA = keys(a);
-            if (keysA.length !== keys(b).length) {
-                return false;
-            }
-            let idx = stackA.length;
-            while (--idx >= 0) {
-                if (stackA[idx] === a) {
-                    return stackB[idx] === b;
-                }
-            }
-            stackA[stackA.length] = a;
-            stackB[stackB.length] = b;
-            idx = keysA.length;
-            while (--idx >= 0) {
-                let key = keysA[idx];
-                if (!_has(key, b) || !_eqDeep(b[key], a[key], stackA, stackB)) {
-                    return false;
-                }
-            }
-            stackA.pop();
-            stackB.pop();
-            return true;
-        }
-        return false;
+        if (!areTypesEqual(typeA, b)) return false;
+        if (eq(a, b)) return true;
+        if (typeA === 'RegExp') return areRegExpsEqual(a, b);
+        if (!isObject(a)) return false;
+        
+        return compareObjects(a, b, stackA, stackB, typeA);
     };
-
+    
+    // Helper functions
+    function areTypesEqual(typeA, b) {
+        return typeA === type(b);
+    }
+    
+    function areRegExpsEqual(a, b) {
+        return a.source === b.source &&
+               a.global === b.global &&
+               a.ignoreCase === b.ignoreCase &&
+               a.multiline === b.multiline &&
+               a.sticky === b.sticky &&
+               a.unicode === b.unicode;
+    }
+    
+    function isObject(a) {
+        return Object(a) === a;
+    }
+    
+    function compareObjects(a, b, stackA, stackB, typeA) {
+        if (typeA === 'Date') return a.getTime() === b.getTime();
+        
+        const keysA = keys(a);
+        if (keysA.length !== keys(b).length) return false;
+        
+        if (hasCircularReference(a, b, stackA, stackB)) {
+            return stackB[stackA.indexOf(a)] === b;
+        }
+        
+        stackA.push(a);
+        stackB.push(b);
+        
+        const allPropertiesEqual = keysA.every(key => 
+            _has(key, b) && _eqDeep(b[key], a[key], stackA, stackB)
+        );
+        
+        stackA.pop();
+        stackB.pop();
+        
+        return allPropertiesEqual;
+    }
+    
+    function hasCircularReference(a, b, stackA, stackB) {
+        const idx = stackA.indexOf(a);
+        return idx >= 0;
+    }
     /**
      * Assigns own enumerable properties of the other object to the destination
      * object preferring items in other.
