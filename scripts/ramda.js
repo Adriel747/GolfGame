@@ -312,9 +312,8 @@
     var _eq = function _eq(a, b) {
         if (a === 0) {
             return 1 / a === 1 / b;
-        } else {
-            return a === b || a !== a && b !== b;
-        }
+        } 
+            return a === b || (Number.isNaN(a) && Number.isNaN(b));
     };
 
     var _filter = function _filter(fn, list) {
