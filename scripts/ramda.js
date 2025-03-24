@@ -207,30 +207,24 @@
      * @param {Function} fn The function to curry.
      * @return {Function} The curried function.
      */
-    let _curry2 = function _curry2(fn) {
+    const _curry2 = function _curry2(fn) {
         return function f2(a, b) {
-            let n = arguments.length;
-            if (n === 0) {
+            const n = arguments.length;
+            
+            if (n === 0 || (n === 1 && a === __) || (n === 2 && a === __ && b === __)) {
                 return f2;
-            } else if (n === 1 && a === __) {
-                return f2;
-            } else if (n === 1) {
-                return _curry1(function (b) {
-                    return fn(a, b);
-                });
-            } else if (n === 2 && a === __ && b === __) {
-                return f2;
-            } else if (n === 2 && a === __) {
-                return _curry1(function (a) {
-                    return fn(a, b);
-                });
-            } else if (n === 2 && b === __) {
-                return _curry1(function (b) {
-                    return fn(a, b);
-                });
-            } else {
-                return fn(a, b);
             }
+            
+            if (n === 1) {
+                return _curry1(b => fn(a, b));
+            }
+            
+            if (n === 2) {
+                if (a === __) return _curry1(a => fn(a, b));
+                if (b === __) return _curry1(b => fn(a, b));
+            }
+            
+            return fn(a, b);
         };
     };
 
