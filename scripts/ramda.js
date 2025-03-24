@@ -979,10 +979,18 @@
      */
     let comparator = _curry1(function comparator(pred) {
         return function (a, b) {
-            return pred(a, b) ? -1 : pred(b, a) ? 1 : 0;
+            let result;
+            if (pred(a, b)) {
+                result = -1;
+            } else if (pred(b, a)) {
+                result = 1;
+            } else {
+                result = 0;
+            }
+            return result;
         };
     });
-
+    
     /**
      * Takes a function `f` and returns a function `g` such that:
      *
@@ -3117,10 +3125,19 @@
         return _slice(list).sort(function (a, b) {
             let aa = fn(a);
             let bb = fn(b);
-            return aa < bb ? -1 : aa > bb ? 1 : 0;
+            
+            let result;
+            if (aa < bb) {
+                result = -1;
+            } else if (aa > bb) {
+                result = 1;
+            } else {
+                result = 0;
+            }
+    
+            return result;
         });
     });
-
     /**
      * Finds the first index of a substring in a string, returning -1 if it's not present
      *
@@ -3365,8 +3382,16 @@
      *      R.type(/[A-z]/); //=> "RegExp"
      */
     let type = _curry1(function type(val) {
-        return val === null ? 'Null' : val === undefined ? 'Undefined' : Object.prototype.toString.call(val).slice(8, -1);
-    });
+        let result;
+        if (val === null) {
+            result = 'Null';
+        } else if (val === undefined) {
+            result = 'Undefined';
+        } else {
+            result = Object.prototype.toString.call(val).slice(8, -1);
+        }
+        return result;
+    });    
 
     /**
      * Takes a function `fn`, which takes a single array argument, and returns
@@ -6302,8 +6327,14 @@
             return 'new Date(' + _quote(_toISOString(x)) + ')';
         case '[object Null]':
             return 'null';
-        case '[object Number]':
-            return typeof x === 'object' ? 'new Number(' + recur(x.valueOf()) + ')' : 1 / x === -Infinity ? '-0' : x.toString(10);
+            case '[object Number]':
+                if (typeof x === 'object') {
+                    return 'new Number(' + recur(x.valueOf()) + ')';
+                } else if (1 / x === -Infinity) {
+                    return '-0';
+                } else {
+                    return x.toString(10);
+                }            
         case '[object String]':
             return typeof x === 'object' ? 'new String(' + recur(x.valueOf()) + ')' : _quote(x);
         case '[object Undefined]':
@@ -6700,7 +6731,13 @@
         while (++idx < len) {
             let key = props[idx];
             let val = obj[key];
-            let list = _has(val, out) ? out[val] : out[val] = [];
+            let list;
+            if (_has(val, out)) {
+                list = out[val];
+            } else {
+                out[val] = [];
+                list = out[val];
+            }
             list[list.length] = key;
         }
         return out;
@@ -6808,7 +6845,15 @@
         let width = 2 - len % 2;
         let idx = (len - width) / 2;
         return mean(_slice(list).sort(function (a, b) {
-            return a < b ? -1 : a > b ? 1 : 0;
+            if(a < b){
+                return -1;
+            }
+            else if(a > b){
+                return 1;
+            }
+            else{
+                return 0;
+            }
         }).slice(idx, idx + width));
     });
 

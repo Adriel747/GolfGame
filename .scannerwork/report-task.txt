@@ -2,5 +2,5 @@ projectKey=golfGame
 serverUrl=http://localhost:9000
 serverVersion=25.3.0.104237
 dashboardUrl=http://localhost:9000/dashboard?id=golfGame
-ceTaskId=29f6dcc7-97de-458c-a8f9-539920a77bd1
-ceTaskUrl=http://localhost:9000/api/ce/task?id=29f6dcc7-97de-458c-a8f9-539920a77bd1
+ceTaskId=e96301ba-86ab-451c-8e85-4d6de2cc1536
+ceTaskUrl=http://localhost:9000/api/ce/task?id=e96301ba-86ab-451c-8e85-4d6de2cc1536
