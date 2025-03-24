@@ -316,8 +316,10 @@
             return a === b || (Number.isNaN(a) && Number.isNaN(b));
     };
 
-    var _filter = function _filter(fn, list) {
-        var idx = -1, len = list.length, result = [];
+    const _filter = function _filter(fn, list) {
+        let idx = -1;
+        const len = list.length;
+        const result = [];
         while (++idx < len) {
             if (fn(list[idx])) {
                 result[result.length] = list[idx];
